@@ -65,7 +65,7 @@ local function onequip(inst, owner)
 		inst:AddTag("inuse")
 		inst:RemoveTag("nosteal")
 		inst.components.equippable.walkspeedmult = nil
-		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD * 1.25)
+		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD * 1.11)
 		if owner.prefab ~= "wurt" then
 			owner:RemoveTag("stronggrip")
 		end
@@ -73,7 +73,7 @@ local function onequip(inst, owner)
 		inst:AddTag("inuse")
 		inst:RemoveTag("nosteal")
 		inst.components.equippable.walkspeedmult = TUNING.LUOXIAOHEI_SWORD_SPD_MULT
-		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD * 2.5)
+		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD * 1.67)
 		if owner.prefab ~= "wurt" then
 			owner:RemoveTag("stronggrip")
 		end
@@ -142,7 +142,7 @@ local function fn()
 	inst.components.weapon:SetDamage(function(inst, attacker, target)
 		return TUNING.LUOXIAOHEI_SWORD_ATK *
 		(0.5 + inst.components.finiteuses:GetPercent() * 0.5) *
-		(attacker:HasTag("metal_manipulator") and 1 or attacker.prefab == "wolfgang" and attacker.strength == "mighty" and 1.2 or 0.5)
+		(attacker:HasTag("metal_manipulator") and 1 or attacker.prefab == "wolfgang" and attacker.strength == "mighty" and 1.2 or 0.8)
 	end)
 	inst.components.weapon:SetOnAttack(function()
 		local owner = inst.components.inventoryitem:GetGrandOwner()

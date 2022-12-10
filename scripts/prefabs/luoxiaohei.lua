@@ -126,12 +126,12 @@ function(inst)
 		return nil
 	end)
 	inst.components.combat.customdamagemultfn = function(inst, target, weapon, multiplier, mount)
-		return inst:HasTag("luoxiaohei_skill_on") and 1.4 or 1
+		return inst:HasTag("luoxiaohei_skill_on") and 1.7 or 1
 	end
 	inst.components.combat.bonusdamagefn = function(attacker, target, damage, weapon)
 		if inst:HasTag("luoxiaohei_skill_on") and target.components.health and target.components.health:GetPercent() < 0.5 then
 			if target.components.inventory ~= nil then
-				return damage - target.components.inventory:CalcDamageAbsorption(damage, attacker, weapon) / 2
+				return damage - target.components.inventory:CalcDamageAbsorption(damage, attacker, weapon) * 0.5
 			end
 		end
 		return 0
