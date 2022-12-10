@@ -1,0 +1,164 @@
+local function LIMBO(tbl)
+	tbl["zhr"] = tbl["zh"]
+	return tbl[TUNING.LUOXIAOHEI_LANGUAGE] or tbl[1]
+end
+
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hello there, maid.", ["zh"] = "你好，女仆小姐。"}),
+	ATTACKER = LIMBO({"What're you doing?", ["zh"] = "你想干什么？"}),
+	MURDERER = LIMBO({"Murder! Get'er!", ["zh"] = "凶手！抓住她！！"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"She can no longer survive as a maid without a heart.", ["zh"] = "这个女仆需要一颗心才能存活。"}),
+	FIRESTARTER = LIMBO({"Should a maid do this?", ["zh"] = "这是女仆该干的事吗？"}),
+}
+STRINGS.CHARACTERS.WOLFGANG.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hello there, maid.", ["zh"] = "你好，女仆小姐。"}),
+	ATTACKER = LIMBO({"Does maid want to fight?", ["zh"] = "女仆小姐想要战斗吗？"}),
+	MURDERER = LIMBO({"Wolfgang can defeat her!", ["zh"] = "沃尔夫冈能搞定她！"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"I'll find a hert for the maid!", ["zh"] = "我去给女仆找颗心！"}),
+	FIRESTARTER = LIMBO({"Wolfgang had thought maid doesn't set fire!", ["zh"] = "沃尔夫冈以为女仆不会放火！"}),
+}
+STRINGS.CHARACTERS.WAXWELL.DESCRIBE.LUOXIAOHEI = {
+	GENERIC = LIMBO({"She has some kind of power.", ["zh"] = "这女仆身上有种说不清楚的力量。"}),
+	ATTACKER = LIMBO({"What're you doing?", ["zh"] = "你想干什么？"}),
+	MURDERER = LIMBO({"You are very dangerous and must be eliminated.", ["zh"] = "你很危险，必须被排除。"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"She can no longer survive as a maid without a heart.", ["zh"] = "这个女仆需要一颗心才能存活。"}),
+	FIRESTARTER = LIMBO({"Should a maid do this?", ["zh"] = "这是女仆该干的事吗？"}),
+}
+STRINGS.CHARACTERS.WX78.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"DETECTING... MAID!", ["zh"] = "检测到…女仆！"}),
+	ATTACKER = LIMBO({"WARING: MALICIOUS DETECTED", ["zh"] = "警告：检测到恶意"}),
+	MURDERER = LIMBO({"WARING: EXTREMELY DANGEROUS CREATURE DETECTED", ["zh"] = "警告：检测到极端危险的生物"}),
+	REVIVER = LIMBO({"MAID %s IS JUDGED TO BE CONDUCTIVE TO SURVIVAL", ["zh"] = "女仆%s被判定为有利于生存"}),
+	GHOST = LIMBO({"FLESH WEAKLING MAID NEEDS A HEART", ["zh"] = "肉体虚弱的女仆需要一颗心"}),
+	FIRESTARTER = LIMBO({"MAID SKILL OF %s IS DETECTED TO BE DOWNGRADED", ["zh"] = "已降低%s的女仆技能评级"}),
+}
+STRINGS.CHARACTERS.WILLOW.DESCRIBE.LUOXIAOHEI = {
+	GENERIC = LIMBO({"Oh, she's not so friendly to me.", ["zh"] = "我感觉她很不喜欢我。"}),
+	ATTACKER = LIMBO({"Did your master be offended?", ["zh"] = "你的主人被得罪了吗？"}),
+	MURDERER = LIMBO({"I'd gonna burn you murder out!", ["zh"] = "我要烧了你这凶手！"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"She can no longer survive as a maid without a heart.", ["zh"] = "这个女仆需要一颗心才能存活。"}),
+	FIRESTARTER = LIMBO({"we are like fellow now!", ["zh"] = "同道中人增加了！"}),
+}
+STRINGS.CHARACTERS.WENDY.DESCRIBE.LUOXIAOHEI = {
+	GENERIC = LIMBO({"Bring my life to your master!", ["zh"] = "把我的生命带给你的主人吧！"}),
+	ATTACKER = LIMBO({"That's her nature... Or isn't it?", ["zh"] = "这就是她的本性……又或者不是？"}),
+	MURDERER = LIMBO({"Am I the next?", ["zh"] = "下一个就是我了吗？"}),
+	REVIVER = LIMBO({"I'd appreciate... if I'm still alive.", ["zh"] = "我会记得的……如果还活着的话。"}),
+	GHOST = LIMBO({"Just need a heart... You are way luckier than my sister.", ["zh"] = "只要一颗心就好……你比我姐姐幸运多了。"}),
+	FIRESTARTER = LIMBO({"A little mistake caused this trategy.", ["zh"] = "一次小失误酿成了惨剧。"}),
+}
+STRINGS.CHARACTERS.WOODIE.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hey, Ms. maid!", ["zh"] = "早，女仆小姐!"}),
+	ATTACKER = LIMBO({"This is not in line with the etiquette of a maid, is it?", ["zh"] = "这不符合女仆的礼仪吧？"}),
+	MURDERER = LIMBO({"Murder! I'll cut you down!", ["zh"] = "凶手！看我砍了你！"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"I'll find a hert for the maid!", ["zh"] = "我去给女仆找颗心！"}),
+	FIRESTARTER = LIMBO({"I had thought maid isn't enemy of forest!", ["zh"] = "我以为女仆不是森林的敌人！"}),
+}
+STRINGS.CHARACTERS.WICKERBOTTOM.DESCRIBE.LUOXIAOHEI = {
+	GENERIC = LIMBO({"She must came from a big family.", ["zh"] = "她一定是从某个大家族那里来的。"}),
+	ATTACKER = LIMBO({"Did your master be offended?", ["zh"] = "你的主人被得罪了吗？"}),
+	MURDERER = LIMBO({"I'd kill you and write a tale about a maid killer!", ["zh"] = "我要干掉你，再写成一本书！"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"She can no longer survive as a maid without a heart.", ["zh"] = "这个女仆需要一颗心才能存活。"}),
+	FIRESTARTER = LIMBO({"I had never seen a maid like this!", ["zh"] = "我可没见过这样干事的女仆！？"}),
+}
+STRINGS.CHARACTERS.WEBBER.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hey, Ms. maid!", ["zh"] = "早，女仆小姐!"}),
+	ATTACKER = LIMBO({"Why are you being so mean, Ms. maid?", ["zh"] = "你怎么生气，女仆小姐了？"}),
+	MURDERER = LIMBO({"We won't let you hurt our friends!", ["zh"] = "我们不想让你伤害我们的朋友！"}),
+	REVIVER = LIMBO({"Thanks a lot, %s.", ["zh"] = "感谢你的帮助，%s。"}),
+	GHOST = LIMBO({"We'll find a hert for the maid!", ["zh"] = "我们去给女仆找颗心！"}),
+	FIRESTARTER = LIMBO({"Playing with fire is not good, Ms. maid!", ["zh"] = "玩火是不好的，女仆小姐！"}),
+}
+STRINGS.CHARACTERS.WATHGRITHR.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Good health to you and your master, maid!", ["zh"] = "祝你和你的主人健康，女仆小姐！"}),
+	ATTACKER = LIMBO({"Dost thou test me, maid?", ["zh"] = "女仆，你要挑战我吗？"}),
+	MURDERER = LIMBO({"Maid! Let us settle this in battle!", ["zh"] = "女仆！让我们用战斗解决这事吧！"}),
+	REVIVER = LIMBO({"%s has a noble heart.", ["zh"] = "%s有一颗崇高的心。"}),
+	GHOST = LIMBO({"I'll find a hert for the maid!", ["zh"] = "我去给女仆找颗心！"}),
+	FIRESTARTER = LIMBO({"You seems to be out of state, maid.", ["zh"] = "你不在状态吗，女仆？"}),
+}
+STRINGS.CHARACTERS.WINONA.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Good ta see ya, maid!", ["zh"] = "见到你很高兴，女仆小姐！"}),
+	ATTACKER = LIMBO({"Hey! Look out!", ["zh"] = "喂！看着点儿！"}),
+	MURDERER = LIMBO({"Freeze! Tell me who instigated you!", ["zh"] = "不要跑！给我交代你的主使！"}),
+	REVIVER = LIMBO({"That was good work there, %s.", ["zh"] = "干得不错，%s。"}),
+	GHOST = LIMBO({"You'll be fine, maid, just neet a heart.", ["zh"] = "别担心了，女仆，只要一颗心就好。"}),
+	FIRESTARTER = LIMBO({"You seems to be out of state, maid.", ["zh"] = "你不在状态吗，女仆？"}),
+}
+STRINGS.CHARACTERS.WORTOX.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hey! A human with magic!", ["zh"] = "嘿！会魔法的人类！"}),
+	ATTACKER = LIMBO({"Don't hit me!", ["zh"] = "别打我！"}),
+	MURDERER = LIMBO({"I was just playing around! Please don't hurt me!", ["zh"] = "我就是瞎玩的！别伤害我！"}),
+	REVIVER = LIMBO({"%s, you generous soul!", ["zh"] = "%s，你真是个慷慨的灵魂！"}),
+	GHOST = LIMBO({"Just a nibble? Your soul looks strong.", ["zh"] = "就吃一小口好么？你的灵魂这么强大的话。"}),
+	FIRESTARTER = LIMBO({"A maid pranker? What a good idea!", ["zh"] = "恶作剧女仆？真是个好点子！"}),
+}
+STRINGS.CHARACTERS.WORMWOOD.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Looking good, Friend!", ["zh"] = "看起来很精神，朋友！"}),
+	ATTACKER = LIMBO({"Don't hurt! Hurting bad!", ["zh"] = "别动手！动手不对！"}),
+	MURDERER = LIMBO({"No! Don't make friends dead!", ["zh"] = "不！别让朋友们去死！"}),
+	REVIVER = LIMBO({"%s makes friends well again!", ["zh"] = "%s让朋友又好起来了！"}),
+	GHOST = LIMBO({"Oh. Need help?", ["zh"] = "喔，要帮忙吗？"}),
+	FIRESTARTER = LIMBO({"Scary fire! Help!", ["zh"] = "可怕的火！救命！"}),
+}
+STRINGS.CHARACTERS.WARLY.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Bonjour, %s!", ["zh"] = "你好，%s！"}),
+	ATTACKER = LIMBO({"%s, why fight when we can cook?", ["zh"] = "%s，能做饭打什么架？"}),
+	MURDERER = LIMBO({"I've burned my bridges with that one.", ["zh"] = "我跟那个人已经没有回头路了。"}),
+	REVIVER = LIMBO({"You can rely on %s when it's important.", ["zh"] = "%s在关键时候能靠得住。"}),
+	GHOST = LIMBO({"Don't be scared, mon amie. I will help.", ["zh"] = "别害怕，我的朋友。我会帮忙的。"}),
+	FIRESTARTER = LIMBO({"I don't want to nitpick how you light fires, but...!", ["zh"] = "我不想挑剔你点火的方式，但是……"}),
+}
+STRINGS.CHARACTERS.WURT.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hello tidy clothing lady!", ["zh"] = "你好整洁衣服女士！"}),
+	ATTACKER = LIMBO({"Hey! Stop it, florp!", ["zh"] = "嘿！停手，浮浪噗！"}),
+	MURDERER = LIMBO({"You broke trust!!", ["zh"] = "你辜负了我的信任！！"}),
+	REVIVER = LIMBO({"You... help me, flort?", ["zh"] = "你……帮我，浮浪特？"}),
+	GHOST = LIMBO({"Don't be sad, will get heart!", ["zh"] = "别难过，会给你找颗心！"}),
+	FIRESTARTER = LIMBO({"Glorp, that dangerous!", ["zh"] = "格浪噗，那样做很危险！"}),
+}
+STRINGS.CHARACTERS.WALTER.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Hey Ms. maid!", ["zh"] = "你好，女仆小姐！"}),
+	ATTACKER = LIMBO({"Y-you stay away!", ["zh"] = "你——你别过来！"}),
+	MURDERER = LIMBO({"A killer maid! I once watched a drama about this...", ["zh"] = "杀手女仆！我上次看过一个讲这个的话剧……"}),
+	REVIVER = LIMBO({"Thanks for patching me up, Ms. %s!", ["zh"] = "多谢你救我，%s小姐！"}),
+	GHOST = LIMBO({"Don't worry Ms. maid! Woby and I will get a heart for you in no time.", ["zh"] = "别担心，女仆小姐！ 我和沃比很快就会为你找到一颗心。"}),
+	FIRESTARTER = LIMBO({"Ms. maid, wait! The fire pit is over THERE!", ["zh"] = "女仆小姐，等等！营火在那边！"}),
+}
+STRINGS.CHARACTERS.WANDA.DESCRIBE.LUOXIAOHEI =
+{
+	GENERIC = LIMBO({"Greetings, %s!", ["zh"] = "你好，%s！"}),
+	ATTACKER = LIMBO({"That makes no good sense, %s!", ["zh"] = "这样做没有任何意义，%s！"}),
+	MURDERER = LIMBO({"I saw what you've done in your so-called \"private time\", murder!", ["zh"] = "我看到你在你所谓的“私人空间”里干的好事了，你这凶手！"}),
+	REVIVER = LIMBO({"So we ARE bosom friends in all of the timelines, %s!", ["zh"] = "我们果然是时光中的挚友啊，%s！"}),
+	GHOST = LIMBO({"I'll save you in a minute, %s. You know I can do it.", ["zh"] = "我马上救你，%s。你知道我做得到。"}),
+	FIRESTARTER = LIMBO({"I thought you can make it safe all the time...", ["zh"] = "我以为你做事每时每刻都是周全的……"}),
+}
+
+-- -- Mod characters
+-- if STRINGS.CHARACTERS.AMIYA then STRINGS.CHARACTERS.REIMU.DESCRIBE.LUOXIAOHEI = {
+-- 	GENERIC = LIMBO({"Glad to see you again, Sakuya.", ["zh"] = "又见面了，红魔馆的女仆长。"}),
+-- 	ATTACKER = LIMBO({"Calm down, Sakuya!", ["zh"] = "冷静点，咲夜！"}),
+-- 	MURDERER = LIMBO({"Fine... Time to do some extermination!", ["zh"] = "好~退治决定~"}),
+-- 	REVIVER = LIMBO({"Thanks a lot, Sakuya.", ["zh"] = "谢了，咲夜。"}),
+-- 	GHOST = LIMBO({"That's supposed to be impossible, but maybe we can...", ["zh"] = "这本来是不可能的，但是也许我们可以……"}),
+-- 	FIRESTARTER = LIMBO({"You seems to be out of state, Sakuya.", ["zh"] = "你不在状态吗，咲夜？"}),
+-- } end
