@@ -92,6 +92,16 @@ function(inst)
 	inst.components.hunger.hungerrate = 2 * TUNING.WILSON_HUNGER_RATE
 	inst.components.sanity.neg_aura_mult = 0.5
 
+	-- inst.components.sanity:SetSanityMonitoringFn(function(self)
+	-- 	if self:IsInsane() then
+	-- 		if inst:HasTag("luoxiaohei_sword_caster") then
+	-- 			inst:RemoveTag("luoxiaohei_sword_caster")
+	-- 		end
+	-- 	else
+	-- 		inst:AddTag("luoxiaohei_sword_caster")
+	-- 	end
+	-- end)
+
 	inst.components.combat:SetLordExtRange(TUNING.LUOXIAOHEI_EXT_RANGE)
 	inst.components.combat:SetLordProjectile(function(inst)
 		return inst:HasTag("luoxiaohei_skill_on") and "luoxiaohei_irondart_s" or "luoxiaohei_irondart"
@@ -103,7 +113,9 @@ function(inst)
 	inst.components.combat:SetOnLordExtAttackFn(function(inst)
 		local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		if weapon and weapon.components.finiteuses then
-			weapon.components.finiteuses:Use(inst:HasTag("luoxiaohei_skill_on") and 6 or 3)
+			-- weapon.components.finiteuses:Use(inst:HasTag("luoxiaohei_skill_on") and 6 or 3)
+			weapon.components.finiteuses:Use(3)
+			-- print(weapon.components.finiteuses:GetUses())
 		end
 	end)
 	inst.components.combat:SetMercinessFn(function(inst, target)
@@ -126,7 +138,8 @@ function(inst)
 		return nil
 	end)
 	inst.components.combat.customdamagemultfn = function(inst, target, weapon, multiplier, mount)
-		return inst:HasTag("luoxiaohei_skill_on") and 1.7 or 1
+		return (inst:HasTag("luoxiaohei_skill_on") and 1.7 or 1) *
+		((target:HasTag("chess") or target:HasTag("archive_centipede") or target.prefab == "wx78") and 2 or 1)
 	end
 	inst.components.combat.bonusdamagefn = function(attacker, target, damage, weapon)
 		if inst:HasTag("luoxiaohei_skill_on") and target.components.health and target.components.health:GetPercent() < 0.5 then
@@ -136,6 +149,20 @@ function(inst)
 		end
 		return 0
 	end
+	inst:ListenForEvent("onhitother", function(inst, data)
+		if data.target:HasTag("chess") or data.target.prefab == "archive_centipede" or data.target.prefab == "wx78" then
+			local regen = math.floor(data.damage / 20)
+			for _, v in pairs(inst.components.inventory:FindItems(function(item)
+				return (item:HasTag("metal") or IsInTable(luoxiaohei_extra_repairables, item.prefab)) and item.components.finiteuses
+			end)) do
+				if v.components.finiteuses:GetPercent() < 1 then
+					v.components.finiteuses:Use(-1 * regen)
+					break
+				end
+			end
+	
+		end
+	end)
 	inst:ListenForEvent("ontryattack", function(inst, data)
 		if inst:HasTag("luoxiaohei_skill_on") then
 			local extratgt = FindEntity(inst, TUNING.LUOXIAOHEI_EXT_RANGE, function(ent, inst)
@@ -155,14 +182,84 @@ function(inst)
 		end
 	end)
 	inst:ListenForEvent("sanitydelta", function(inst, data)
-		local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-		if equip and equip.prefab == "luoxiaohei_sword" then
-			if inst.components.sanity:IsInsane() then
-				equip:AddTag("inuse")
-			else
-				equip:RemoveTag("inuse")
+		-- local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		-- if equip and equip.prefab == "luoxiaohei_sword" then
+		-- 	if inst.components.sanity:IsInsane() then
+		-- 		equip:AddTag("inuse")
+		-- 	else
+		-- 		equip:RemoveTag("inuse")
+		-- 	end
+		-- end
+		if inst.components.sanity:IsInsane() then
+			if inst:HasTag("luoxiaohei_sword_caster") then
+				inst:RemoveTag("luoxiaohei_sword_caster")
+			end
+			inst:PushEvent("luoxiaohei_skill_switch", {forced = false})
+		else
+			inst:AddTag("luoxiaohei_sword_caster")
+		end
+
+	end)
+
+	inst.components.sanity.custom_rate_fn = function(inst)
+		return inst:HasTag("luoxiaohei_skill_on") and -1.5 or 0
+	end
+
+	inst:ListenForEvent("luoxiaohei_skill_switch", function(inst, data)
+		-- print("====B====")
+		local skill_on = not inst:HasTag("luoxiaohei_skill_on")
+		if data and data.forced ~= nil then
+			skill_on = data.forced
+		end
+		if skill_on then
+			if not inst:HasTag("luoxiaohei_skill_on") then
+				inst:AddTag("luoxiaohei_skill_on")
+			end
+			inst.SoundEmitter:PlaySound("luoxiaohei/se/skill_on", nil, TUNING.LUOXIAOHEI_SE * 0.3)
+			inst.SoundEmitter:KillSound("luoxiaohei_attack")
+			inst.SoundEmitter:PlaySound("luoxiaohei/voice/attack", "luoxiaohei_attack", TUNING.LUOXIAOHEI_VOICE)
+			inst.AnimState:SetHaunted(true)
+		else
+			inst:RemoveTag("luoxiaohei_skill_on")
+			if not inst:HasTag("spawnprotection") then
+				inst.AnimState:SetHaunted(false)
 			end
 		end
+		-- if owner.luoxiaohei_skill_task == nil then
+		-- 	local tpf = FRAMES / TheSim:GetTickTime()
+		-- 	owner.luoxiaohei_skill_task = owner:DoPeriodicTask(FRAMES, function()
+		-- 		if math.floor(GetTick() % (20 * tpf)) == 0 then
+		-- 			owner.components.sanity:DoDelta(-1)
+		-- 		end
+		-- 		if not owner:HasTag("luoxiaohei_skill_on") then
+		-- 			owner:AddTag("luoxiaohei_skill_on")
+		-- 			owner.SoundEmitter:PlaySound("luoxiaohei/se/skill_on", nil, TUNING.LUOXIAOHEI_SE * 0.3)
+		-- 			owner.SoundEmitter:KillSound("luoxiaohei_attack")
+		-- 			owner.SoundEmitter:PlaySound("luoxiaohei/voice/attack", "luoxiaohei_attack", TUNING.LUOXIAOHEI_VOICE)
+		-- 			owner.AnimState:SetHaunted(true)
+		-- 		end
+		-- 		if owner.components.health:IsDead() or owner.components.sanity:IsInsane() then
+		-- 			owner:RemoveTag("luoxiaohei_skill_on")
+		-- 			if not owner:HasTag("spawnprotection") then
+		-- 				owner.AnimState:SetHaunted(false)
+		-- 			end
+		-- 			owner.luoxiaohei_skill_task:Cancel()
+		-- 			owner.luoxiaohei_skill_task = nil
+		-- 		end
+		-- 	end)
+		-- else
+		-- 	owner:RemoveTag("luoxiaohei_skill_on")
+		-- 	if not owner:HasTag("spawnprotection") then
+		-- 		owner.AnimState:SetHaunted(false)
+		-- 	end
+		-- 	owner.luoxiaohei_skill_task:Cancel()
+		-- 	owner.luoxiaohei_skill_task = nil
+		-- end
+		-- inst:DoTaskInTime(FRAMES, function()
+		-- 	inst.components.useableitem:StopUsingItem()
+		-- end)
+		-- onequip(inst, owner)
+
 	end)
 	inst:DoPeriodicTask(TUNING.LUOXIAOHEI_REPAIR_TIME, function(inst)
 		for _, v in pairs(inst.components.inventory:FindItems(function(item)
@@ -188,4 +285,7 @@ function(inst)
 			end
 		end)	-- >
 	end
+
+	inst.skeleton_prefab = nil
+
 end, TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.LUOXIAOHEI)

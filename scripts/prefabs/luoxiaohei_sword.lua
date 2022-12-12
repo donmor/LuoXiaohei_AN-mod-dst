@@ -31,8 +31,41 @@ local function OnHit(inst, owner, target)
 end
 
 local function OnMiss(inst, owner, target)
-	inst.components.projectile:Stop()
+	-- inst.components.projectile:Stop()
 	inst.entity:Hide()
+end
+
+local function OnThrownMT(inst, owner, target)
+	-- print("----T----")
+	if target ~= owner then
+		inst.SoundEmitter:PlaySound("luoxiaohei/se/"..(owner:HasTag("luoxiaohei_skill_on") and "sword_s_pre" or "sword_pre"), nil, TUNING.LUOXIAOHEI_SE)
+	end
+	inst.AnimState:PlayAnimation("spin_loop_m", true)
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+	-- inst:DoPeriodicTask(FRAMES * 3, function(inst)
+	-- 	if inst.components.projectile:IsThrown() and inst.components.projectile.speed < TUNING.LUOXIAOHEI_EXT_SPEED then
+	-- 		inst.components.projectile:SetSpeed(inst.components.projectile.speed + 1)
+	-- 		inst.Physics:SetMotorVel(inst.components.projectile.speed, 0, 0)
+		-- end
+	-- end)
+end
+
+local function OnHitMT(inst, owner, target)
+	-- print("----H----")
+	if target ~= nil and target:IsValid() then
+		SpawnPrefab("impact").Transform:SetPosition(target:GetPosition():Get())
+	end
+	inst.AnimState:PlayAnimation("idle")
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.Default)
+	inst.SoundEmitter:PlaySound("luoxiaohei/se/"..(owner:HasTag("luoxiaohei_skill_on") and "sword_s_pst" or "sword_pst"), nil, TUNING.LUOXIAOHEI_SE)
+end
+
+local function OnMissMT(inst, owner, target)
+-- 	-- inst.components.projectile:Stop()
+-- 	inst.entity:Hide()
+	-- print("----M----")
+	inst.AnimState:PlayAnimation("idle")
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.Default)
 end
 
 local function onequip(inst, owner)
@@ -45,16 +78,17 @@ local function onequip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_object", "luoxiaohei_sword_swap", "luoxiaohei_sword_swap")
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
-	if owner.prefab == "luoxiaohei" and not owner.components.sanity:IsInsane() then
-		inst:RemoveTag("inuse")
-		inst:AddTag("nosteal")
-		inst.components.equippable.walkspeedmult = nil
-		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD)
-		if owner.prefab ~= "wurt" then
-			owner:AddTag("stronggrip")
-		end
-	elseif owner:HasTag("metal_manipulator") then
-		inst:AddTag("inuse")
+	-- if owner.prefab == "luoxiaohei" and not owner.components.sanity:IsInsane() then
+	-- 	-- inst:RemoveTag("inuse")-- TODO: standalone action
+	-- 	inst:AddTag("nosteal")
+	-- 	inst.components.equippable.walkspeedmult = nil
+	-- 	owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD)
+	-- 	if owner.prefab ~= "wurt" then
+	-- 		owner:AddTag("stronggrip")
+	-- 	end
+	-- elseif owner:HasTag("metal_manipulator") then
+	if owner:HasTag("metal_manipulator") then
+		-- inst:AddTag("inuse")
 		inst:AddTag("nosteal")
 		inst.components.equippable.walkspeedmult = nil
 		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD)
@@ -62,7 +96,7 @@ local function onequip(inst, owner)
 			owner:AddTag("stronggrip")
 		end
 	elseif owner.prefab == "wolfgang" and owner.strength == "mighty" then
-		inst:AddTag("inuse")
+		-- inst:AddTag("inuse")
 		inst:RemoveTag("nosteal")
 		inst.components.equippable.walkspeedmult = nil
 		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD * 1.11)
@@ -70,7 +104,7 @@ local function onequip(inst, owner)
 			owner:RemoveTag("stronggrip")
 		end
 	else
-		inst:AddTag("inuse")
+		-- inst:AddTag("inuse")
 		inst:RemoveTag("nosteal")
 		inst.components.equippable.walkspeedmult = TUNING.LUOXIAOHEI_SWORD_SPD_MULT
 		owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD * 1.67)
@@ -83,7 +117,7 @@ end
 local function onunequip(inst, owner)
 	owner.AnimState:Hide("ARM_carry")
 	owner.AnimState:Show("ARM_normal")
-	inst:AddTag("inuse")
+	-- inst:AddTag("inuse")
 	inst:RemoveTag("nosteal")
 	inst.components.equippable.walkspeedmult = TUNING.LUOXIAOHEI_SWORD_SPD_MULT
 	owner.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD)
@@ -113,6 +147,7 @@ local function fn()
 	inst:AddTag("pointy")
     inst:AddTag("weapon")
     inst:AddTag("metal")
+    inst:AddTag("magic_throwable")
 
 	inst.entity:SetPristine()
 
@@ -152,48 +187,57 @@ local function fn()
 		inst.SoundEmitter:PlaySound("luoxiaohei/se/"..(owner:HasTag("luoxiaohei_skill_on") and "sword_s_pre" or "sword_pre"), nil, TUNING.LUOXIAOHEI_SE)
 		inst.SoundEmitter:PlaySound("luoxiaohei/se/"..(owner:HasTag("luoxiaohei_skill_on") and "sword_s_pst" or "sword_pst"), nil, TUNING.LUOXIAOHEI_SE)
 	end)
+	inst.components.weapon:SetMagicThrowParams({
+		speed = TUNING.LUOXIAOHEI_EXT_SPEED,
+		range = TUNING.LUOXIAOHEI_EXT_RANGE * 8,
+		atkrange = TUNING.LUOXIAOHEI_EXT_RANGE * 2,
+		homing = true,
+		onthrown = OnThrownMT,
+		onhit = OnHitMT,
+		onmiss = OnMissMT,
+	})
 
-	inst:AddComponent("useableitem")
-	inst.components.useableitem:SetOnUseFn(function(inst)
-		local owner = inst.components.inventoryitem:GetGrandOwner()
-		if not owner or owner.prefab ~= "luoxiaohei" then
-			return
-		end
-		if owner.luoxiaohei_skill_task == nil then
-			local tpf = FRAMES / TheSim:GetTickTime()
-			owner.luoxiaohei_skill_task = owner:DoPeriodicTask(FRAMES, function()
-				if math.floor(GetTick() % (20 * tpf)) == 0 then
-					owner.components.sanity:DoDelta(-1)
-				end
-				if not owner:HasTag("luoxiaohei_skill_on") then
-					owner:AddTag("luoxiaohei_skill_on")
-					owner.SoundEmitter:PlaySound("luoxiaohei/se/skill_on", nil, TUNING.LUOXIAOHEI_SE * 0.3)
-					owner.SoundEmitter:KillSound("luoxiaohei_attack")
-					owner.SoundEmitter:PlaySound("luoxiaohei/voice/attack", "luoxiaohei_attack", TUNING.LUOXIAOHEI_VOICE)
-					owner.AnimState:SetHaunted(true)
-				end
-				if owner.components.health:IsDead() or owner.components.sanity:IsInsane() then
-					owner:RemoveTag("luoxiaohei_skill_on")
-					if not owner:HasTag("spawnprotection") then
-						owner.AnimState:SetHaunted(false)
-					end
-					owner.luoxiaohei_skill_task:Cancel()
-					owner.luoxiaohei_skill_task = nil
-				end
-			end)
-		else
-			owner:RemoveTag("luoxiaohei_skill_on")
-			if not owner:HasTag("spawnprotection") then
-				owner.AnimState:SetHaunted(false)
-			end
-			owner.luoxiaohei_skill_task:Cancel()
-			owner.luoxiaohei_skill_task = nil
-		end
-		inst:DoTaskInTime(FRAMES, function()
-			inst.components.useableitem:StopUsingItem()
-		end)
-		onequip(inst, owner)
-	end)
+	-- inst:AddComponent("useableitem")
+	-- inst.components.useableitem:SetOnUseFn(function(inst)
+	-- 	local owner = inst.components.inventoryitem:GetGrandOwner()
+	-- 	if not owner or owner.prefab ~= "luoxiaohei" then
+	-- 		return
+	-- 	end
+	-- 	if owner.luoxiaohei_skill_task == nil then
+	-- 		local tpf = FRAMES / TheSim:GetTickTime()
+	-- 		owner.luoxiaohei_skill_task = owner:DoPeriodicTask(FRAMES, function()
+	-- 			if math.floor(GetTick() % (20 * tpf)) == 0 then
+	-- 				owner.components.sanity:DoDelta(-1)
+	-- 			end
+	-- 			if not owner:HasTag("luoxiaohei_skill_on") then
+	-- 				owner:AddTag("luoxiaohei_skill_on")
+	-- 				owner.SoundEmitter:PlaySound("luoxiaohei/se/skill_on", nil, TUNING.LUOXIAOHEI_SE * 0.3)
+	-- 				owner.SoundEmitter:KillSound("luoxiaohei_attack")
+	-- 				owner.SoundEmitter:PlaySound("luoxiaohei/voice/attack", "luoxiaohei_attack", TUNING.LUOXIAOHEI_VOICE)
+	-- 				owner.AnimState:SetHaunted(true)
+	-- 			end
+	-- 			if owner.components.health:IsDead() or owner.components.sanity:IsInsane() then
+	-- 				owner:RemoveTag("luoxiaohei_skill_on")
+	-- 				if not owner:HasTag("spawnprotection") then
+	-- 					owner.AnimState:SetHaunted(false)
+	-- 				end
+	-- 				owner.luoxiaohei_skill_task:Cancel()
+	-- 				owner.luoxiaohei_skill_task = nil
+	-- 			end
+	-- 		end)
+	-- 	else
+	-- 		owner:RemoveTag("luoxiaohei_skill_on")
+	-- 		if not owner:HasTag("spawnprotection") then
+	-- 			owner.AnimState:SetHaunted(false)
+	-- 		end
+	-- 		owner.luoxiaohei_skill_task:Cancel()
+	-- 		owner.luoxiaohei_skill_task = nil
+	-- 	end
+	-- 	inst:DoTaskInTime(FRAMES, function()
+	-- 		inst.components.useableitem:StopUsingItem()
+	-- 	end)
+	-- 	onequip(inst, owner)
+	-- end)
 
 	MakeHauntable(inst)
 

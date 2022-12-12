@@ -1,12 +1,17 @@
+--[[ 初始化GLOBAL > ]]
 GLOBAL.setmetatable(env,{__index = function(_, k)
 	return GLOBAL.rawget(GLOBAL,k)
-end})	-- <初始化GLOBAL
+end})
+--<
 
+--[[ 初始化多语言 > ]]
 local function LIMBO(tbl)
 	tbl["zhr"] = tbl["zh"]
 	return tbl[TUNING.LUOXIAOHEI_LANGUAGE] or tbl[1]
 end
+--<
 
+--[[ table检查实用函数 > ]]
 local function IsInTable(tbl, value)
 	for k, v in pairs(tbl) do
 		if v == value then
@@ -15,15 +20,19 @@ local function IsInTable(tbl, value)
 	end
 	return false;
 end
+--<
 
+--[[ mod检查实用函数 > ]]
 local function isModEnabled(mod)
 	local list = ModManager and ModManager.enabledmods
 	if not list then
 		return false
 	end
 	return IsInTable(list, mod)
-end	-- <local function
+end
+--<
 
+--[[ TUNING常量表 > ]]
 TUNING.LUOXIAOHEI_SE = GetModConfigData("luoxiaohei_se")
 TUNING.LUOXIAOHEI_VOICE = GetModConfigData("luoxiaohei_voice")
 TUNING.LUOXIAOHEI_SWORD_ATK = 50
@@ -63,7 +72,10 @@ TUNING.LUOXIAOHEI_SANITY = 250
 TUNING.LUOXIAOHEI_HEALTH = 150
 --	TUNING.LUOXIAOHEI_DAMAGE = 1
 -- end	-- <设定强度
+TUNING.LUOXIAOHEI_AMULET_DAPPERNESS = 6.8 / 60
+--<
 
+--[[ prefab文件及材质加载 > ]]
 PrefabFiles = {
 	"luoxiaohei",
 	"luoxiaohei_none",
@@ -114,11 +126,16 @@ Assets = {
 	Asset( "SOUND", "sound/luoxiaohei.fsb" ),
 	Asset( "SOUNDPACKAGE", "sound/luoxiaohei.fev" ),
 }
-TUNING.STARTING_ITEM_IMAGE_OVERRIDE.luoxiaohei_sword = {
+TUNING.STARTING_ITEM_IMAGE_OVERRIDE.luoxiaohei_sword = {	-- <初始物品
 	atlas = "images/inventoryimages/luoxiaohei_sword.xml",
 	image = "luoxiaohei_sword.tex",
-}	-- <材质
-TUNING.LUOXIAOHEI_AMULET_DAPPERNESS = 6.8 / 60
+}
+AddMinimapAtlas("images/map_icons/luoxiaohei.xml")	-- <小地图
+AddMinimapAtlas("images/map_icons/luoxiaohei_sword.xml")
+--<
+
+
+--[[ STRING常量表 > ]]
 STRINGS.NAMES.LUOXIAOHEI = LIMBO({"Luo Xiaohei", ["zh"] = "罗小黑"})
 STRINGS.CHARACTER_TITLES.luoxiaohei = LIMBO({"Elfin Black Cat", ["zh"] = "妖精小黑猫"})
 STRINGS.CHARACTER_NAMES.luoxiaohei = STRINGS.NAMES.LUOXIAOHEI
@@ -134,12 +151,19 @@ require "desc"
 -- 	["zhr"] = function() return require "speech_zh" end,
 -- }
 -- local spf = speeches[TUNING.LUOXIAOHEI_LANGUAGE]
--- STRINGS.CHARACTERS.IZAYOI = spf and spf() or require "speech"	-- <文本 * TODO:
+-- STRINGS.CHARACTERS.IZAYOI = spf and spf() or require "speech"	-- TODO: English?
 STRINGS.CHARACTERS.LUOXIAOHEI = require "speech_zh"
 
-AddMinimapAtlas("images/map_icons/luoxiaohei.xml")
-AddMinimapAtlas("images/map_icons/luoxiaohei_sword.xml")	-- <小地图
+STRINGS.NAMES.LUOXIAOHEI_SWORD = LIMBO({"Iron Sword", ["zh"] = "镔铁大剑",})
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.LUOXIAOHEI_SWORD = LIMBO({"A heavy huge weapon.", ["zh"] = "又大又沉的武器。"})
+STRINGS.RECIPE_DESC.LUOXIAOHEI_SWORD = LIMBO({"I have to fight now.", ["zh"] = "我现在必须战斗才行。"})
 
+STRINGS.NAMES.ORIRON_SHARD = LIMBO({"Oriron Shard", ["zh"] = "异铁碎片",})
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.ORIRON_SHARD = LIMBO({"Some shards that never seen before.", ["zh"] = "从来没见过的碎片。"})
+STRINGS.RECIPE_DESC.ORIRON_SHARD = LIMBO({"It feels like iron, so maybe I can...", ["zh"] = "里面好像有铁，也许我可以……"})
+--<
+
+--[[ 添加人物 > ]]
 local skin_modes = {
 	{
 		type = "ghost_skin",
@@ -149,8 +173,10 @@ local skin_modes = {
 		offset = { 0, -25 }
 	},
 }
-AddModCharacter("luoxiaohei", "MALE", skin_modes)	-- <人物
+AddModCharacter("luoxiaohei", "MALE", skin_modes)
+--<
 
+--[[ 加载制作配方 > ]]
 local myrecipemap = {
 	luoxiaohei_sword = {recipe =  {Ingredient("oriron_shard", 12), Ingredient("rope", 1), Ingredient(CHARACTER_INGREDIENT.SANITY, 20)}, amount = nil},
 	oriron_shard = {recipe =  {Ingredient("moonrocknugget", 3), Ingredient(CHARACTER_INGREDIENT.SANITY, 15)}, amount = 6},
@@ -175,18 +201,12 @@ AddRecipeX("oriron_shard", myrecipemap.oriron_shard.recipe, TECH.NONE,
 	builder_tag = "luoxiaohei_skiller",
 	atlas = "images/inventoryimages/oriron_shard.xml",
 	image = "oriron_shard.tex"
-}, {"CHARACTER", "REFINE"})	-- <配方
-
-STRINGS.NAMES.LUOXIAOHEI_SWORD = LIMBO({"Iron Sword", ["zh"] = "镔铁大剑",})
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.LUOXIAOHEI_SWORD = LIMBO({"A heavy huge weapon.", ["zh"] = "又大又沉的武器。"})
-STRINGS.RECIPE_DESC.LUOXIAOHEI_SWORD = LIMBO({"I have to fight now.", ["zh"] = "我现在必须战斗才行。"})
-
-STRINGS.NAMES.ORIRON_SHARD = LIMBO({"Oriron Shard", ["zh"] = "异铁碎片",})
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.ORIRON_SHARD = LIMBO({"Some shards that never seen before.", ["zh"] = "从来没见过的碎片。"})
-STRINGS.RECIPE_DESC.ORIRON_SHARD = LIMBO({"It feels like iron, so maybe I can...", ["zh"] = "里面好像有铁，也许我可以……"})
+}, {"CHARACTER", "REFINE"})
+--<
 
 local characterName = "luoxiaohei"
 
+--[[ 增补Whisper > ]]
 local function CancelSay(self)
 	if self.task ~= nil then
 		scheduler:KillTask(self.task)
@@ -283,44 +303,6 @@ local state_whisper = State {
 AddStategraphEvent("wilson", event_whisper)
 AddStategraphState("wilson", state_whisper)
 
-
-local ah = ActionHandler(ACTIONS.ATTACK, function(inst, action)
-	inst.sg.mem.localchainattack = not action.forced or nil
-	if not (inst.sg:HasStateTag("attack") and action.target == inst.sg.statemem.attacktarget or inst.components.health:IsDead()) then
-		local weapon = inst.components.combat ~= nil and inst.components.combat:GetWeapon() or nil
-		return (weapon == nil and "attack")
-			or (weapon:HasTag("blowdart") and "blowdart")
-			or (weapon:HasTag("mgun") and "mgun")	-- compatibility
-			or inst.components.combat:GetExtAction(action.target)
-			or (weapon:HasTag("slingshot") and "slingshot_shoot")
-			or (weapon:HasTag("thrown") and "throw")
-			or (weapon:HasTag("propweapon") and "attack_prop_pre")
-			or (weapon:HasTag("multithruster") and "multithrust_pre")
-			or (weapon:HasTag("helmsplitter") and "helmsplitter_pre")
-			or "attack"
-	end
-end)
-local ahc = ActionHandler(ACTIONS.ATTACK, function(inst, action)
-	if not (inst.sg:HasStateTag("attack") and action.target == inst.sg.statemem.attacktarget or inst.replica.health:IsDead()) then
-		local equip = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-		if equip == nil then
-			return "attack"
-		end
-		local inventoryitem = equip.replica.inventoryitem
-		return (not (inventoryitem ~= nil and inventoryitem:IsWeapon()) and "attack")
-			or (equip:HasTag("blowdart") and "blowdart")
-			or (equip:HasTag("mgun") and "mgun")	-- compatibility
-			or inst.replica.combat:GetExtActionC(action.target)
-			or (equip:HasTag("slingshot") and "slingshot_shoot")
-			or (equip:HasTag("thrown") and "throw")
-			or (equip:HasTag("propweapon") and "attack_prop_pre")
-			or "attack"
-	end
-
-end)
-AddStategraphActionHandler("wilson", ah)
-AddStategraphActionHandler("wilson_client", ahc)
-
 AddComponentPostInit("talker", function(self)
 	local function whisperfn(self, script, nobroadcast, colour)
 		local player = ThePlayer
@@ -396,8 +378,10 @@ AddComponentPostInit("talker", function(self)
 			self.task = self.inst:StartThread(function() whisperfn(self, lines, nobroadcast, colour) end)
 		end
 	end
-end)	-- <添加whisper函数到talker和sg中
+end)
+--<
 
+--[[ 改写检查 > ]]
 ACTIONS.LOOKAT.fn = function(act)
 	local targ = act.target or act.invobject
 	if targ ~= nil and targ.prefab ~= nil and targ.components.inspectable ~= nil then
@@ -418,8 +402,10 @@ ACTIONS.LOOKAT.fn = function(act)
 			return true
 		end
 	end
-end	-- <改写检查动作API
+end
+--<
 
+--[[ inventory函数增补 > ]]
 AddComponentPostInit("inventory", function(self)
 	self.FindItemByName = function(self, pf)
 		for k, v in pairs(self.itemslots) do
@@ -463,8 +449,23 @@ AddComponentPostInit("inventory", function(self)
 		return damage * absorbed_percent
 	end
 	
-end)	-- <函数增补
+end)
+--<
 
+-- --[[ sanity函数增补 > ]]
+-- AddComponentPostInit("sanity", function(self)
+-- 	self.SetSanityMonitoringFn = function(self, fn)
+-- 		self.updatemonfn = fn
+-- 	end
+-- 	local pOnUpdate = self.OnUpdate
+-- 	self.OnUpdate = function(self, dt)
+-- 		pOnUpdate(self, dt)
+-- 		self.updatemonfn(self)
+-- 	end	
+-- end)
+-- --<
+
+--[[ 见习执行者相关代码 > ]]
 AddComponentPostInit("health", function(self)
 	local pDoDelta = self.DoDelta
 	self.DoDelta = function(self, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
@@ -503,6 +504,313 @@ AddComponentPostInit("health", function(self)
 		end
 	end
 end)
+--<
+
+--[[ 碎金为刃相关代码 > ]]
+AddAction("LUOXIAOHEI_SKILL", LIMBO({"From Ore to Blade", ["zh"] = "碎金为刃"}), function(act)
+	-- if act.doer.components.combat and act.target.components.target and
+	-- 		act.doer.components.inventory  then
+	-- 	local weapon = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	-- 	if weapon and weapon.components.weapon and weapon:HasTag("magic_throwable") then
+	-- 		weapon.components.weapon:MagicThrow(act.doer, act.target)
+	-- 	end
+	-- end
+	act.doer:PushEvent("luoxiaohei_skill_switch")
+	return true
+end)
+
+AddComponentAction("INVENTORY", "weapon", function(inst, doer, actions, right, ...)
+	-- print(inst, doer, actions, right, ...)
+	-- for k, v in pairs(actions) do
+	-- 	print(k, v)
+	-- 	for k2, v2 in pairs(actions) do
+	-- 		print(k2, v2)
+	-- 	end
+	
+	-- end
+	-- if right then
+		-- print(inst.replica.weapon, doer.prefab, doer.replica.inventory, doer.replica.sanity)
+		-- if inst.replica.weapon and doer.prefab == "luoxiaohei" then
+		if doer.prefab == "luoxiaohei" then
+			local weapon = doer.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			-- print(weapon, doer.replica.sanity:IsInsane())
+			if weapon == inst and not doer.replica.sanity:IsInsane() then
+				table.insert(actions, ACTIONS.LUOXIAOHEI_SKILL)
+			end
+		end
+	-- end
+end
+)
+local luoxiaohei_showoff = State{
+	name = "luoxiaohei_showoff",
+	tags = { "showoff" },
+
+	onenter = function(inst)
+		local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		if not equip then
+			inst.AnimState:OverrideSymbol("swap_object", "", "")
+			inst.AnimState:Show("ARM_carry")
+			inst.AnimState:Hide("ARM_normal")
+		end
+		inst.components.locomotor:Stop()
+		inst.AnimState:PlayAnimation("dumbbell_mighty_pre")
+		inst.AnimState:PushAnimation("dumbbell_mighty_loop", false)
+		-- inst.AnimState:PushAnimation(equip and "dumbbell_mighty_pst" or "item_in", false)
+	end,
+
+	timeline =
+	{
+		TimeEvent(3 * FRAMES, function(inst)
+			inst:PerformBufferedAction()
+			local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			if not equip then
+				inst.AnimState:OverrideSymbol("swap_object", "", "")
+				inst.AnimState:Show("ARM_carry")
+				inst.AnimState:Hide("ARM_normal")
+			end
+			inst.AnimState:PushAnimation(equip and "dumbbell_mighty_pst" or "item_in", false)
+		end),
+	},
+
+	events =
+	{
+		EventHandler("animqueueover", function(inst)
+			if inst.AnimState:AnimDone() then
+				local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+				if not equip then
+					inst.AnimState:OverrideSymbol("swap_object", "", "")
+					inst.AnimState:Hide("ARM_carry")
+					inst.AnimState:Show("ARM_normal")
+				end
+				inst.sg:GoToState("idle")
+			end
+		end),
+	},
+}
+local luoxiaohei_showoffc = State
+{
+	name = "luoxiaohei_showoff",
+	tags = { "showoff" },
+
+	onenter = function(inst)
+		local equip = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		if not equip then
+			inst.AnimState:OverrideSymbol("swap_object", "", "")
+			inst.AnimState:Show("ARM_carry")
+			inst.AnimState:Hide("ARM_normal")
+		end
+		-- inst.components.locomotor:Stop()
+		inst.AnimState:PlayAnimation("dumbbell_mighty_pre")
+		inst.AnimState:PushAnimation("dumbbell_mighty_loop", false)
+		-- inst.AnimState:PushAnimation("dumbbell_mighty_pst", false)
+		inst:PerformPreviewBufferedAction()
+		inst.sg:SetTimeout(2)
+		
+	end,
+
+	onupdate = function(inst)
+		if inst.bufferedaction == nil then
+			local equip = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			if not equip then
+				inst.AnimState:OverrideSymbol("swap_object", "", "")
+				inst.AnimState:Hide("ARM_carry")
+				inst.AnimState:Show("ARM_normal")
+			end
+			inst.AnimState:PushAnimation(equip and "dumbbell_mighty_pst" or "item_in", false)
+			inst.sg:GoToState("idle", true)
+		end
+	end,
+
+	ontimeout = function(inst)
+		inst:ClearBufferedAction()
+		local equip = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		if not equip then
+			inst.AnimState:OverrideSymbol("swap_object", "", "")
+			inst.AnimState:Hide("ARM_carry")
+			inst.AnimState:Show("ARM_normal")
+		end
+		inst.AnimState:PushAnimation(equip and "dumbbell_mighty_pst" or "item_in", false)
+		inst.sg:GoToState("idle", true)
+	end,
+}
+AddStategraphState("wilson", luoxiaohei_showoff)
+AddStategraphState("wilson_client", luoxiaohei_showoffc)
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.LUOXIAOHEI_SKILL, function(inst, action)
+	-- print("++++A++++")
+	-- print(inst:HasTag("luoxiaohei_skill_on"))
+	return inst:HasTag("luoxiaohei_skill_on") and "doequippedaction" or "luoxiaohei_showoff"
+end))
+AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.LUOXIAOHEI_SKILL, function(inst, action)
+	-- print("++++A++++")
+	-- print(inst:HasTag("luoxiaohei_skill_on"))
+	return inst:HasTag("luoxiaohei_skill_on") and "doequippedaction" or "luoxiaohei_showoffc"
+end))
+--<
+
+--[[ 大剑祭起相关代码 > ]]
+local mt_action = AddAction("MAGICTHROW", LIMBO({"Wield and throw", ["zh"] = "祭起"}), function(act)
+	-- print("T0")
+	if act.doer.components.combat and act.target.components.combat and
+			act.doer.components.inventory  then
+		-- print("T0.1")
+		local weapon = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		if weapon and weapon.components.weapon and weapon:HasTag("magic_throwable") then
+			-- print("T0.5")
+			weapon.components.weapon:MagicThrow(act.doer, act.target)
+		end
+	end
+	return true
+end)
+mt_action.customarrivecheck = function(inst, dest)
+	local weapon = inst and inst.components.inventory and inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	if weapon and weapon.components.weapon and weapon.components.weapon.mt_params then
+		local x, _, z = inst.Transform:GetWorldPosition()
+		local x2, _, z2 = dest:GetPoint()
+		return math.sqrt(distsq(x, z, x2, z2)) <= weapon.components.weapon.mt_params.atkrange
+	end
+	return math.sqrt(distsq(x, z, x2, z2)) <= inst.components.combat:GetHitRange()
+end
+
+AddComponentAction("SCENE", "combat", function(inst, doer, actions, right, ...)
+	-- print(inst, doer, actions, right, ...)
+	if right and doer ~= inst and not (
+		not TheNet:GetPVPEnabled() and inst:HasTag("player") or doer.replica.teamworker and doer.replica.teamworker:Identify(inst)
+	) then
+		-- if doer.replica.combat and doer.replica.inventory then
+		-- print(doer.replica.inventory)
+		local weapon = doer.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		-- print(weapon, weapon.replica.weapon, weapon:HasTag("magic_throwable"), doer:HasTag(weapon.prefab.."_caster"))
+		if weapon and weapon:HasTag("magic_throwable") and doer:HasTag(weapon.prefab.."_caster") then
+			table.insert(actions, ACTIONS.MAGICTHROW)
+		end
+		-- end
+	end
+end
+)
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.MAGICTHROW, "luoxiaohei_showoff"))
+AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.MAGICTHROW, "luoxiaohei_showoffc"))
+
+AddComponentPostInit("weapon", function(self)
+	self.MagicThrow = function(self, caster, target)
+		-- print("ST1")
+		local owner = self.inst.components.inventoryitem:GetGrandOwner()
+		if owner and owner.components.inventory then
+			owner.components.inventory:DropItem(self.inst)
+		elseif owner and owner.components.container then
+			owner.components.container:DropItem(self.inst)
+		end
+		self.inst.AnimState:PlayAnimation("spin_loop_m", true)
+		self.inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+		local dest = target:GetPosition()
+		local direction = (dest - self.inst:GetPosition()):GetNormalized()
+		local angle = math.acos(direction:Dot(Vector3(1, 0, 0))) / DEGREES
+		self.inst.Transform:SetRotation(angle)
+		self.inst:FacePoint(dest)
+		if self.inst.Physics ~= nil and self.inst.Physics:IsActive() then
+			local x, y, z = self.inst.Transform:GetWorldPosition()
+			self.inst.Physics:Teleport(x, .1, z)
+	
+			x, y, z = self.inst.Transform:GetWorldPosition()
+			local x1, y1, z1 = target.Transform:GetWorldPosition()
+			local angle = math.atan2(z1 - z, x1 - x) + (math.random() * 20 - 10) * DEGREES
+			local speed = 1 + math.random() * 2
+			self.inst.Physics:SetVel(math.cos(angle) * speed, 10, math.sin(angle) * speed)
+			self.inst.last_y = y
+		end
+		self.inst.mt_task = self.inst:DoPeriodicTask(FRAMES, function(inst)
+			if inst.Physics ~= nil and inst.Physics:IsActive() then
+				local _, y, _ = inst.Transform:GetWorldPosition()
+				if inst.last_y < y then
+					inst.last_y = y
+					return
+				elseif inst.last_y - y < 1 then
+					return
+				end
+			end
+			if inst.components.projectile then
+				inst.components.projectile:Throw(caster, target, caster)
+			elseif self.mt_params ~= nil then
+				inst:AddComponent("projectile")
+				inst.components.projectile:SetSpeed(self.mt_params.speed)
+				inst.components.projectile:SetRange(self.mt_params.range)
+				inst.components.projectile:SetHoming(self.mt_params.homing)
+				inst.components.projectile:SetOnThrownFn(function(inst, owner, ...)
+					self.mt_params.onthrown(inst, caster, ...)
+				end)
+				-- inst.components.projectile:SetOnThrownFn(self.mt_params.onthrown)
+				inst.components.projectile:SetOnHitFn(function(inst, owner, ...)
+					self.mt_params.onhit(inst, caster, ...)
+					inst:DoTaskInTime(FRAMES, function(inst)
+						inst:RemoveComponent("projectile")
+					end)
+				end)
+				inst.components.projectile:SetOnMissFn(function(inst, owner, ...)
+					self.mt_params.onmiss(inst, caster, ...)
+					inst:DoTaskInTime(FRAMES, function(inst)
+						inst:RemoveComponent("projectile")
+					end)
+				end)
+				inst.components.projectile:Throw(caster, target, caster)
+			end
+			inst.mt_task:Cancel()
+			inst.mt_task = nil
+		end)
+	end
+	self.SetMagicThrowParams = function(self, params)
+		if params == nil then
+			self.mt_params = nil
+			return
+		end
+		self.mt_params = {
+			speed = params and params.speed or nil,
+			range = params and params.range or nil,
+			atkrange = params and params.atkrange or nil,
+			homing = params and params.homing or true,
+			onthrown = params and params.onthrown or nil,
+			onhit = params and params.onhit or nil,
+			onmiss = params and params.onmiss or nil,
+		}
+	end
+end)
+--<
+
+--[[ 战斗系统注入 > ]]
+local ah = ActionHandler(ACTIONS.ATTACK, function(inst, action)
+	inst.sg.mem.localchainattack = not action.forced or nil
+	if not (inst.sg:HasStateTag("attack") and action.target == inst.sg.statemem.attacktarget or inst.components.health:IsDead()) then
+		local weapon = inst.components.combat ~= nil and inst.components.combat:GetWeapon() or nil
+		return (weapon == nil and "attack")
+			or (weapon:HasTag("blowdart") and "blowdart")
+			or (weapon:HasTag("mgun") and "mgun")	-- compatibility
+			or inst.components.combat:GetExtAction(action.target)
+			or (weapon:HasTag("slingshot") and "slingshot_shoot")
+			or (weapon:HasTag("thrown") and "throw")
+			or (weapon:HasTag("propweapon") and "attack_prop_pre")
+			or (weapon:HasTag("multithruster") and "multithrust_pre")
+			or (weapon:HasTag("helmsplitter") and "helmsplitter_pre")
+			or "attack"
+	end
+end)
+local ahc = ActionHandler(ACTIONS.ATTACK, function(inst, action)
+	if not (inst.sg:HasStateTag("attack") and action.target == inst.sg.statemem.attacktarget or inst.replica.health:IsDead()) then
+		local equip = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		if equip == nil then
+			return "attack"
+		end
+		local inventoryitem = equip.replica.inventoryitem
+		return (not (inventoryitem ~= nil and inventoryitem:IsWeapon()) and "attack")
+			or (equip:HasTag("blowdart") and "blowdart")
+			or (equip:HasTag("mgun") and "mgun")	-- compatibility
+			or inst.replica.combat:GetExtActionC(action.target)
+			or (equip:HasTag("slingshot") and "slingshot_shoot")
+			or (equip:HasTag("thrown") and "throw")
+			or (equip:HasTag("propweapon") and "attack_prop_pre")
+			or "attack"
+	end
+
+end)
+AddStategraphActionHandler("wilson", ah)
+AddStategraphActionHandler("wilson_client", ahc)
 
 AddComponentPostInit("combat", function(self)
 	self.SetLordExtRange = function(self, range)	-- Can be a function
@@ -656,11 +964,12 @@ AddClassPostConstruct("components/combat_replica", function(self)
 			end
 			return nil
 		end
-		self._mercinessfn = function(inst, target)
+		self._mercinessfn = function(inst, target)	-- <智慧生物排除
 			return target and target:IsValid() and not target:HasTag("INLIMBO") and target ~= inst and
 			not target:HasTag("wall") and
 			target.replica.combat and target.replica.health and
-			(TUNING.LUOXIAOHEI_MERCY_ALL and true or target:HasTag("character"))	-- 智慧生物排除
+			(TUNING.LUOXIAOHEI_MERCY_ALL and true or target:HasTag("character"))
 		end
 	end
 end)
+--<
